@@ -192,6 +192,21 @@ def unsave_resource():
         return jsonify({'message': 'Resource not found in saved list.'}), 404
 
 
+# View User's Saved Resources
+@app.route('/user/<int:user_id>/saved_resources', methods=['GET'])
+def get_saved_resources(user_id):
+    user = User.query.get_or_404(user_id)
+    saved_resources = [{
+        'id': resource.id,
+        'title': resource.title,
+        'description': resource.description,
+        'category': resource.category,
+        'course_code': resource.course_code,
+        'public_url': resource.public_url
+    } for user_resource in user.saved_resources for resource in [user_resource.resource]]
+    return jsonify(saved_resources)
+
+
 # View User's Created Resources
 @app.route('/user/<int:user_id>/created_resources', methods=['GET'])
 def get_created_resources(user_id):

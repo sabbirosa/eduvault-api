@@ -243,6 +243,31 @@ curl -X POST https://eduvault.sabbir.co/api/unsave_resource \
 }
 ```
 
+### View User's Saved Resources
+
+**GET /user/{user_id}/saved_resources**
+
+View all resources saved by a specific user.
+
+```bash
+curl -X GET https://eduvault.sabbir.co/api/user/1/saved_resources
+```
+
+##### Response:
+
+```json
+[
+  {
+    "id": 1,
+    "title": "Saved Resource Title",
+    "description": "Saved Resource Description",
+    "category": "Category Name",
+    "course_code": "CS101",
+    "public_url": "https://resource-link.com"
+  }
+]
+```
+
 ### View User's Created Resources
 
 **GET /user/{user_id}/created_resources**
