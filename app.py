@@ -63,6 +63,9 @@ def home():
 def register():
     data = request.get_json()
     existing_user = User.query.filter((User.email == data['email']) | (User.student_id == data['student_id'])).first()
+
+    last_user_id = User.query.order_by(User.id.desc()).first()
+    
     if existing_user:
         return jsonify({'message': 'User with that email or student ID already exists.'}), 409
     
@@ -79,7 +82,7 @@ def register():
     
     return jsonify({'message': 'User created successfully!'},
                    {'user_data': {
-                        'id': new_user.id,
+                        'id': last_user_id.id + 1,
                         'full_name': new_user.full_name,
                         'student_id': new_user.student_id,
                         'department': new_user.department,
