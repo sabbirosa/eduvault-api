@@ -77,7 +77,16 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     
-    return jsonify({'message': 'User registered successfully!'}), 201
+    return jsonify({'message': 'User created successfully!'},
+                   {'user_data': {
+                        'id': new_user.id,
+                        'full_name': new_user.full_name,
+                        'student_id': new_user.student_id,
+                        'department': new_user.department,
+                        'email': new_user.email
+                   }
+                   }
+                   ), 201
 
 
 # Login User
