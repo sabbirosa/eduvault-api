@@ -87,7 +87,16 @@ def login():
     user = User.query.filter_by(email=data['email']).first()
     
     if user and bcrypt.check_password_hash(user.password, data['password']):
-        return jsonify({'message': 'Login successful!'}), 200
+        return jsonify({'message': 'Login successful!'},
+                       {'user_data': {
+                            'id': user.id,
+                            'full_name': user.full_name,
+                            'student_id': user.student_id,
+                            'department': user.department,
+                            'email': user.email
+                       }
+                       }
+                       ), 200
     else:
         return jsonify({'message': 'Invalid email or password.'}), 401
 
