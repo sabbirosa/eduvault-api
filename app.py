@@ -28,6 +28,11 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
+    # Add cascade delete to created resources
+    created_resources = db.relationship('Resource', backref='user', lazy=True, cascade="all, delete-orphan")
+    saved_resources = db.relationship('UserResource', backref='user', lazy=True, cascade="all, delete-orphan")
+
+
 # Resource Model
 class Resource(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,7 +43,9 @@ class Resource(db.Model):
     public_url = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    user = db.relationship('User', backref=db.backref('created_resources', lazy=True))
+    # Add cascade delete to saved by users
+    saved_by_users = db.relationship('UserResource', backref='resource', lazy=True, cascade="all, delete-orphan")
+
 
 # UserResource Model (To save/unsave resources)
 class UserResource(db.Model):
@@ -46,8 +53,9 @@ class UserResource(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     resource_id = db.Column(db.Integer, db.ForeignKey('resource.id'), nullable=False)
 
-    user = db.relationship('User', backref=db.backref('saved_resources', lazy=True))
-    resource = db.relationship('Resource', backref=db.backref('saved_by_users', lazy=True))
+    user = db.relationship('User', backref=db.backref('user_resources', lazy=True))
+    resource = db.relationship('Resource', backref=db.backref('resource_users', lazy=True))
+
 
 with app.app_context():
     db.create_all()
